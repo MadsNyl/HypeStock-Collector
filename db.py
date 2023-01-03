@@ -166,7 +166,7 @@ class DB():
             self.check_connection()
 
             self.pool.executemany(
-                "INSERT INTO analytic (symbol, last_price, min_price, max_price, volume, timing) VALUES (%s, %s, %s, %s, %s, %s)",
+                "INSERT INTO analytic (symbol, last_price, min_price, max_price, volume, timing, price_change, price_change_pct) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                 symbols
             )
             self.db.commit()
