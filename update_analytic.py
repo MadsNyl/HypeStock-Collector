@@ -34,7 +34,7 @@ for analytic in analytics:
     timing = timing[-10:]
     timing = f"{timing[-4:]}-{timing[-10:-8]}-{timing[-7:-5]}"
     change = change.split(">")[1].split("<")[0][1:]
-    change_pct = change_pct.split(">")[1].split("<")[0][1:-2].replace("-", "")
+    change_pct = change_pct.split(">")[1].split("<")[0][1:-2]
     date_check = check_date(timing, analytic[0])
     if date_check:
         data.append((analytic[0], float(last_price.replace(",", "")[1:]), float(min_price.replace(",", "")[1:]), float(max_price.replace(",", "")[1:]), int(volume.replace(",", "")), timing, float(change.replace(",", "")), float(change_pct.replace(",", ""))))
