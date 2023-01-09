@@ -1,0 +1,5 @@
+CREATE TABLE twitterUser (
+    username varchar(255),
+    profile_page varchar(255),
+    PRIMARY KEY (username)
+)

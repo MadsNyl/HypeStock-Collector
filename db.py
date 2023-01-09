@@ -136,6 +136,55 @@ class DB():
             pass
             # print(e)
             # print("Insertion of sentiment failed.")
+
+    # insert tweet
+    def insert_tweet(self, tweet: object) -> None:
+        try:
+            self.check_connection()
+
+            self.pool.execute(
+                "INSERT INTO tweet (symbol, url, author, likes, retweets, replies, quotes, score, created_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (tweet["symbol"], tweet["url"], tweet["author"], tweet["like_count"], tweet["retweet_count"], tweet["reply_count"], tweet["quote_count"], tweet["score"], tweet["date"])
+            )
+
+            self.db.commit()
+        except Exception as e:
+            print(e)
+
+    # check if tweet has been seen before
+    def tweet_seen(self, url: str) -> bool:
+        try:
+            self.check_connection()
+
+            self.pool.execute(
+                "SELECT symbol FROM tweet WHERE url = %s",
+                (url, )
+            )
+
+            result = self.pool.fetchone()
+            if result: return True
+            return False
+            
+        except Exception as e:
+            print(e)
+    
+    # check if reddit comment has been seen before
+    def reddit_comment_seen(self, url: str) -> bool:
+        try:
+            self.check_connection()
+
+            self.pool.execute(
+                "SELECT symbol FROM sentiment WHERE permalink = %s",
+                (url, )
+            )
+
+            result = self.pool.fetchone()
+            if result: return True
+            return False
+
+        except Exception as e:
+            print(e)
+        
     
     def get_all_stocks(self) -> tuple:
         try:
@@ -185,5 +234,19 @@ class DB():
 
             result = self.pool.fetchone()
             return result
+        except Exception as e:
+            print(e)
+    
+    # insert twitter profile
+    def insert_twitter_user(self, username: str, url: str) -> None:
+        try:
+            self.check_connection()
+
+            self.pool.execute(
+                "INSERT INTO twitterUser (username, profile_page) VALUES (%s, %s)",
+                (username, url)
+            )  
+
+            self.db.commit()
         except Exception as e:
             print(e)

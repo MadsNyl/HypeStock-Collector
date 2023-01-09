@@ -1,0 +1,14 @@
+CREATE TABLE tweet(
+    symbol varchar(5),
+    url varchar(255),
+    author varchar(255),
+    likes int,
+    retweets int,
+    replies int,
+    quotes int,
+    score float,
+    created_date datetime DEFAULT NOW(),
+    PRIMARY KEY (url),
+    FOREGIN KEY (symbol) REFERENCES stock (symbol),
+    FOREGIN KEY (author) REFERENCES twitterUser (username)
+)

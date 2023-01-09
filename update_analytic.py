@@ -5,7 +5,7 @@ from settings.credentials import SYMBOL_LOOKUP_API
 
 def get_company_name(symbol):
     """
-        Sends a request to schwab.com to check up stock symbol for company name.
+        Sends a request to stock api to check up stock symbol for company name.
     """
     result = requests.get(SYMBOL_LOOKUP_API + symbol)
     json = result.json()
