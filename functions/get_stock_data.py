@@ -11,9 +11,9 @@ def get_stock_data(symbol: str):
         json = result.json()
 
         if json["isValidSymbol"]: 
-            return json["companyInfo"]["companyName"], json["quote"]["lastPrice"], json["quote"]["daysRangeMin"], json["quote"]["daysRangeMax"], json["quote"]["todaysVolume"], json["quote"]["timing"], json["quote"]["todaysChange"], json["quote"]["todaysChangePct"]  
+            return json["companyInfo"]["companyName"] 
 
-        return None, None, None, None, None, None, None, None
+        return None
     except Exception as e:
         print(e)
-        return None, None, None, None, None, None, None, None 
+        return None

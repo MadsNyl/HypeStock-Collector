@@ -123,18 +123,18 @@ class DB():
 
         return seen_stocks
     
-    def insert_sentiment(self, symbol: str, score: float, is_reddit: str, post_url: str, permalink: str, comment_body: str, author: str) -> None:
+    def insert_sentiment(self, symbol: str, neg_score: float, neu_score: float, pos_score: float, is_reddit: str, post_url: str, permalink: str, comment_body: str, author: str, created_date: str) -> None:
         try:
             self.check_connection()
 
             self.pool.execute(
-                "INSERT INTO sentiment (symbol, score, is_reddit, post_url, permalink, comment_body, author) VALUES(%s, %s, %s, %s, %s, %s, %s)",
-                (symbol, score, is_reddit, post_url, permalink, comment_body, author)
+                "INSERT INTO sentiment (symbol, is_reddit, post_url, permalink, body, author, created_date, negative_score, neutral_score, positive_score) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (symbol, is_reddit, post_url, permalink, comment_body, author, created_date, neg_score, neu_score, pos_score)
             )
             self.db.commit()
         except Exception as e:
             pass
-            # print(e)
+            print(e)
             # print("Insertion of sentiment failed.")
 
     # insert tweet
@@ -143,8 +143,8 @@ class DB():
             self.check_connection()
 
             self.pool.execute(
-                "INSERT INTO tweet (symbol, url, author, likes, retweets, replies, quotes, score, created_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (tweet["symbol"], tweet["url"], tweet["author"], tweet["like_count"], tweet["retweet_count"], tweet["reply_count"], tweet["quote_count"], tweet["score"], tweet["date"])
+                "INSERT INTO tweet (symbol, url, author, likes, retweets, replies, quotes, negative_score, neutral_score, positive_score, created_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (tweet["symbol"], tweet["url"], tweet["author"], tweet["like_count"], tweet["retweet_count"], tweet["reply_count"], tweet["quote_count"], tweet["negative_score"], tweet["neutral_score"], tweet["positive_score"], tweet["date"])
             )
 
             self.db.commit()
@@ -165,6 +165,23 @@ class DB():
             if result: return True
             return False
             
+        except Exception as e:
+            print(e)
+    
+    # check if symbol exists
+    def check_symbol(self, symbol: str):
+        try:
+            self.check_connection()
+
+            self.pool.execute(
+                "SELECT symbol, name FROM stock WHERE symbol = %s",
+                (symbol, )
+            )
+
+            result = self.pool.fetchone()
+            if result: return result
+            return False
+
         except Exception as e:
             print(e)
     
@@ -210,7 +227,7 @@ class DB():
         except Exception as e:
             print(e)
     
-    def update_analytics(self, symbols: list[str]) -> None:
+    def update_analytics(self, symbols: list[list]) -> None:
         try:
             self.check_connection()
 

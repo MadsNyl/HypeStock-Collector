@@ -6,9 +6,10 @@ CREATE TABLE tweet(
     retweets int,
     replies int,
     quotes int,
-    score float,
+    negative_score float,
+    neutral_score float,
+    positive_score float,
     created_date datetime DEFAULT NOW(),
     PRIMARY KEY (url),
-    FOREGIN KEY (symbol) REFERENCES stock (symbol),
-    FOREGIN KEY (author) REFERENCES twitterUser (username)
+    FOREGIN KEY (symbol) REFERENCES stock (symbol)
 )
