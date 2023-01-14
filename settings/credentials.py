@@ -22,11 +22,6 @@ reddit = praw.Reddit(
     user_agent = USER_AGENT
 )
 
-# auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-# auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET)
-
-# twitter = tweepy.API(auth)
-
 twitter = tweepy.Client(
     TWITTER_BEARER_TOKEN,
     TWITTER_API_KEY,

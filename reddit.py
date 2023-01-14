@@ -6,6 +6,7 @@ from functions.valid_symbol import is_string_valid
 from functions.get_stock_data import get_stock_data
 from functions.sentiment_analyzis import analyze
 from functions.insert import insert_stock, insert_tracking
+from functions.validate_post import validate_reddit_comment
 from comment import Comment
 
 class Reddit():
@@ -18,6 +19,7 @@ class Reddit():
 
     def __init__(self, subreddit, limit) -> None:
         self.subreddit = reddit.subreddit(subreddit)
+        self.sub = subreddit
         self.limit = limit
         self.seen_stocks = self.db.update_record()
     
@@ -54,12 +56,16 @@ class Reddit():
                 break
 
     def proccess_data(self):
-        l = len(self.data)
-        print_progress_bar_objects(l)
-        for i, obj in enumerate(self.data):
-            # if comment already is in db, continue
-            if self.db.reddit_comment_seen(obj["comment_url"]): continue
+        # check if any comments already are in db
+        sorted_data = validate_reddit_comment(self.db, self.data)
 
+        if len(sorted_data) == 0: 
+            print("All comments allready registered.")
+            return
+
+        l = len(sorted_data)
+        print_progress_bar_objects(l)
+        for i, obj in enumerate(sorted_data):
             # if symbol already is in db, skip fetching stock data
             company_name = self.db.check_symbol(obj["symbol"])
             if not company_name:
@@ -75,7 +81,7 @@ class Reddit():
             insert_stock(self.db, self.seen_stocks, obj["symbol"], company_name)
             
             # # insert sentiment to db
-            self.db.insert_sentiment(obj["symbol"], scores["neg"], scores["neu"], scores["pos"],  True, obj["post_url"], obj["comment_url"], obj["comment_body"], obj["author"], obj["created_date"])
+            self.db.insert_comment(obj["symbol"], scores["neg"], scores["neu"], scores["pos"], self.sub, obj["post_url"], obj["comment_url"], obj["comment_body"], obj["author"], obj["created_date"])
 
             # update progress bar
             print_progress_bar(i + 1, l)

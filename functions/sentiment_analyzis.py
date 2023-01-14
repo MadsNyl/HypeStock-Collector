@@ -3,7 +3,8 @@ from scipy.special import softmax
 import numpy as np
 
 def analyze(text: str) -> dict[str: float]:
-    MODEL = f"cardiffnlp/twitter-roberta-base-sentiment"
+    # MODEL = f"cardiffnlp/twitter-roberta-base-sentiment"
+    MODEL = "model"
     tokenizer = AutoTokenizer.from_pretrained(MODEL)
     model = AutoModelForSequenceClassification.from_pretrained(MODEL)
 

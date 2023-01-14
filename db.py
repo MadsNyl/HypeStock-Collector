@@ -123,19 +123,19 @@ class DB():
 
         return seen_stocks
     
-    def insert_sentiment(self, symbol: str, neg_score: float, neu_score: float, pos_score: float, is_reddit: str, post_url: str, permalink: str, comment_body: str, author: str, created_date: str) -> None:
+    def insert_comment(self, symbol: str, neg_score: float, neu_score: float, pos_score: float, subreddit: str, post_url: str, permalink: str, comment_body: str, author: str, created_date: str) -> None:
         try:
             self.check_connection()
 
             self.pool.execute(
-                "INSERT INTO sentiment (symbol, is_reddit, post_url, permalink, body, author, created_date, negative_score, neutral_score, positive_score) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (symbol, is_reddit, post_url, permalink, comment_body, author, created_date, neg_score, neu_score, pos_score)
+                "INSERT INTO comment (symbol, subreddit, post_url, permalink, body, author, created_date, negative_score, neutral_score, positive_score) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (symbol, subreddit, post_url, permalink, comment_body, author, created_date, neg_score, neu_score, pos_score)
             )
             self.db.commit()
         except Exception as e:
             pass
             print(e)
-            # print("Insertion of sentiment failed.")
+            # print("Insertion of comment failed.")
 
     # insert tweet
     def insert_tweet(self, tweet: object) -> None:
@@ -186,18 +186,17 @@ class DB():
             print(e)
     
     # check if reddit comment has been seen before
-    def reddit_comment_seen(self, url: str) -> bool:
+    def reddit_comments_seen(self, urls: list[str]) -> bool:
         try:
             self.check_connection()
 
             self.pool.execute(
-                "SELECT symbol FROM sentiment WHERE permalink = %s",
-                (url, )
+                f"SELECT permalink FROM comment WHERE permalink IN ({','.join(['%s'] * len(urls))})",
+                tuple(urls)
             )
 
-            result = self.pool.fetchone()
-            if result: return True
-            return False
+            result = self.pool.fetchall()
+            return result
 
         except Exception as e:
             print(e)
