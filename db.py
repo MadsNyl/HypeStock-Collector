@@ -65,8 +65,8 @@ class DB():
 
             if (self.stock_exist(stock.getSymbol()) == False):
                 self.pool.execute(
-                        "INSERT INTO stock (symbol, name, reference_count) VALUES (%s, %s, %s)",
-                        (stock.getSymbol(), stock.getTitle(), stock.getCount())
+                        "INSERT INTO stock (symbol, name, reference_count, exchange) VALUES (%s, %s, %s. %s)",
+                        (stock.getSymbol(), stock.getTitle(), stock.getCount(), stock.getExchange())
                     )
                 self.db.commit()
         except Exception as e:
@@ -84,6 +84,18 @@ class DB():
             self.db.commit()
         except:
             print("Update failed.")
+    
+    def update_exchange(self, symbol: str, exchange: str) -> None:
+        try:
+            self.check_connection()
+
+            self.pool.execute(
+                "UPDATE stock SET exchange = %s WHERE symbol = %s",
+                (exchange, symbol)
+            )
+            self.db.commit()
+        except Exception as e:
+            print(e)
 
     def stock_exist(self, symbol: str) -> bool:
         try:
@@ -115,13 +127,14 @@ class DB():
             if len(results) <= 0: return seen_stocks
 
             for result in results:
-                stock = Stock(result[1], result[0])
+                stock = Stock(result[1], result[0], result[4])
                 stock.increment(result[2] - 1)
                 seen_stocks[result[0]] = stock
-        except:
-            print("Update of records failed.")
+            return seen_stocks
 
-        return seen_stocks
+        except Exception as e:
+            print(e)
+            print("Update of records failed.")
     
     def insert_comment(self, symbol: str, neg_score: float, neu_score: float, pos_score: float, subreddit: str, post_url: str, permalink: str, comment_body: str, author: str, created_date: str) -> None:
         try:
@@ -174,7 +187,7 @@ class DB():
             self.check_connection()
 
             self.pool.execute(
-                "SELECT symbol, name FROM stock WHERE symbol = %s",
+                "SELECT symbol, exchange name FROM stock WHERE symbol = %s",
                 (symbol, )
             )
 

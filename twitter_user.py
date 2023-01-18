@@ -49,20 +49,20 @@ class TwitterUser():
             if self.db.tweet_seen(tweet.url): continue
 
             # check if symbol exsist and get info
-            company_name = self.db.check_symbol(string)
-            if not company_name:
-                company_name = get_stock_data(string) 
+            result = self.db.check_symbol(string)
+            if not result:
+                company_name, exchange = get_stock_data(string) 
                 if company_name is None: continue
             
-            company_name = company_name[1]
-
-            if company_name is None: continue
+            else: 
+                company_name = result[0][0]
+                exchange = result[0][1]
 
             # get sentiment score of content text
             scores = analyze(tweet.content)
 
             # insert stock in db
-            insert_stock(self.db, self.seen_stocks, string, company_name)
+            insert_stock(self.db, self.seen_stocks, string, company_name, exchange)
 
             # create tweet object
             tweet_obj = Tweet.create(tweet, string, scores)

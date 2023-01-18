@@ -67,18 +67,24 @@ class Reddit():
         print_progress_bar_objects(l)
         for i, obj in enumerate(sorted_data):
             # if symbol already is in db, skip fetching stock data
-            company_name = self.db.check_symbol(obj["symbol"])
-            if not company_name:
-                company_name = get_stock_data(obj["symbol"])  
+            result = self.db.check_symbol(obj["symbol"])
+            if not result:
+                company_name, exchange = get_stock_data(obj["symbol"])  
                 if company_name is None: continue
             
-            company_name = company_name[1]
+            else: 
+                company_name = result[0][0]
+                exchange = result[0][1]
 
-            # get sentiment score of comment text
-            scores = analyze(obj["comment_body"])
+            try:
+                # get sentiment score of comment text
+                scores = analyze(obj["comment_body"])
+            except Exception as e:
+                print(e)
+                continue
 
             # insert stock to db
-            insert_stock(self.db, self.seen_stocks, obj["symbol"], company_name)
+            insert_stock(self.db, self.seen_stocks, obj["symbol"], company_name, exchange)
             
             # # insert sentiment to db
             self.db.insert_comment(obj["symbol"], scores["neg"], scores["neu"], scores["pos"], self.sub, obj["post_url"], obj["comment_url"], obj["comment_body"], obj["author"], obj["created_date"])

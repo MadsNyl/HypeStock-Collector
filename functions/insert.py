@@ -13,7 +13,7 @@ def insert_tracking(db: object, symbol: str, last_price: float, min_price: float
     timing = format_timing(timing)
     db.insert_tracking(symbol, last_price, min_price, max_price, volume, timing)
 
-def insert_stock(db: object, seen_stocks: dict, symbol: str, company_name: str) -> None:
+def insert_stock(db: object, seen_stocks: dict, symbol: str, company_name: str, exchange: str) -> None:
     """
         Inserts stock into db.
     """
@@ -21,6 +21,6 @@ def insert_stock(db: object, seen_stocks: dict, symbol: str, company_name: str) 
         seen_stocks[symbol].increment(1)
         db.update_stock(seen_stocks[symbol])
     else:
-        stock = Stock(company_name, symbol)
+        stock = Stock(company_name, symbol, exchange)
         db.insert_stock(stock)
         seen_stocks[symbol] = stock

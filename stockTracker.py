@@ -6,10 +6,12 @@ class Stock:
     _title: str
     _symbol: str
     _count: int = 1
+    _exchange: str
 
-    def __init__(self, title, symbol) -> None:
+    def __init__(self, title: str, symbol: str, exchange: str) -> None:
         self._title = title
         self._symbol = symbol
+        self._exchange = exchange
 
     def increment(self, x) -> None:
         self._count += x
@@ -22,6 +24,9 @@ class Stock:
     
     def getTitle(self) -> str:
         return self._title
+    
+    def getExchange(self) -> str:
+        return self._exchange
 
     def getSymbol(self) -> str: 
         return self._symbol

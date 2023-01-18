@@ -11,9 +11,9 @@ def get_stock_data(symbol: str):
         json = result.json()
 
         if json["isValidSymbol"]: 
-            return json["companyInfo"]["companyName"] 
+            return json["companyInfo"]["companyName"], json["companyInfo"]["exchange"] 
 
-        return None
+        return None, None
     except Exception as e:
         print(e)
-        return None
+        return None, None
