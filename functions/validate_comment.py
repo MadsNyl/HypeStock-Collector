@@ -1,10 +1,12 @@
-def validate_reddit_comment(db: object, data: list[dict]):
+from db.controller import API
+
+def parse_comments(data: list[dict]):
     """
         Check if comments already have been visited.
     """
     comparison_list = list(map(get_comment_url, data))
 
-    comments = db.reddit_comments_seen(comparison_list)
+    comments = API.get_comments(comparison_list)
 
     if not comments: return data
     comments = list(map(map_comment, comments))

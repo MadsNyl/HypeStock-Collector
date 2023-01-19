@@ -9,7 +9,7 @@ CREATE TABLE tweet(
     negative_score float,
     neutral_score float,
     positive_score float,
-    created_date datetime DEFAULT NOW(),
+    created_date datetime,
     PRIMARY KEY (url),
-    FOREGIN KEY (symbol) REFERENCES stock (symbol)
+    FOREIGN KEY (symbol) REFERENCES stock (symbol)
 )

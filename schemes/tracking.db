@@ -1,0 +1,12 @@
+CREATE TABLE tracking (
+    symbol varchar(5),
+    last_price float,
+    min_price float,
+    max_price float,
+    volume int,
+    price_change float,
+    price_change_pct float,
+    timing datetime,
+    PRIMARY KEY(symbol),
+    FOREIGN KEY(symbol) REFERENCES stock(symbol)
+)

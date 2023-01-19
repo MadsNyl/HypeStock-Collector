@@ -1,0 +1,7 @@
+CREATE TABLE stock (
+    symbol varchar(5),
+    name varchar(255),
+    exchange varchar(255),
+    created_date datetime DEFAULT NOW(),
+    PRIMARY KEY (symbol)
+)
