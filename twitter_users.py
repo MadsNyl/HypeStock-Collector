@@ -1,4 +1,4 @@
-from twitter_user import TwitterUser
+from scrapers.twitter_user import TwitterUser
 import sys
 
 usernames = [

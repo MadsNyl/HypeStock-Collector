@@ -1,4 +1,4 @@
-from db import DB
+from db.db import DB
 import sys
 
 def insert(username: str, url: str) -> None:

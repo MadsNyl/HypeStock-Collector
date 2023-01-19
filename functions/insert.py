@@ -1,5 +1,5 @@
 from functions.format_timing import format_timing
-from stockTracker import Stock
+from models.stock import Stock
 
 def insert_tracking(db: object, symbol: str, last_price: float, min_price: float, max_price: float, volume: int, timing: str) -> None:
     """

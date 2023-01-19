@@ -1,5 +1,5 @@
 import requests
-from settings.credentials import SYMBOL_LOOKUP_API
+from functions.settings import SYMBOL_LOOKUP_API
 
 def get_stock_data(symbol: str):
     """

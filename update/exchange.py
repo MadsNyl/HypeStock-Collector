@@ -1,4 +1,4 @@
-from db import DB
+from db.db import DB
 from functions.get_stock_data import get_stock_data
 
 db = DB()

@@ -1,7 +1,6 @@
-import mysql.connector
-from settings.db_settings import DATABASE, DB_PASSWORD, DB_HOST, DB_USERNAME
-from stockTracker import Stock
-
+import mysql.connector, sys
+from db.settings import DATABASE, DB_HOST, DB_USERNAME, DB_PASSWORD
+from models.stock import Stock
 
 class DB():
     def __init__(self):

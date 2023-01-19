@@ -1,6 +1,6 @@
-from db import DB
-import requests
+from db.db import DB
 from settings.credentials import SYMBOL_LOOKUP_API
+import requests
 
 
 def get_company_name(symbol):
