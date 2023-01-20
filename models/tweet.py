@@ -3,10 +3,11 @@ from settings.credentials import twitter
 class Tweet():
     
     @staticmethod
-    def create(tweet: object, symbol: str, scores: float) -> object:
+    def create(tweet: object, symbol: str, scores: float, body: str) -> object:
         obj = {}
         obj["symbol"] = symbol
         obj["url"] = Tweet.build_url(tweet)
+        obj["body"] = body
         obj["author"] = Tweet.get_author(tweet)
         obj["like_count"] = tweet.public_metrics["like_count"]
         obj["retweet_count"] = tweet.public_metrics["retweet_count"]

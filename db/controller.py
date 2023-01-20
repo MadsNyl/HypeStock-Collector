@@ -16,7 +16,22 @@ class API():
 
             return pool.fetchone()
         except Exception as e:
-            print(f"Fetching stock error:\n{e}")
+            print(f"Fetching stock error: {e}")
+    
+    @staticmethod
+    def get_tweet(url: str):
+        """
+            Gets symbol of tweet based on url.
+        """
+        try:
+            pool.execute(
+                Query.get_tweet(),
+                (url, )
+            )
+
+            return pool.fetchone()
+        except Exception as e:
+            print(f"Fetching tweet error: {e}")
 
     @staticmethod
     def get_comments(urls: list[str]):
@@ -31,7 +46,7 @@ class API():
 
             return pool.fetchall()
         except Exception as e:
-            print(f"Fetching comments error:\n{e}")
+            print(f"Fetching comments error: {e}")
 
     @staticmethod
     def insert_comment(symbol: str, neg_score: float, neu_score: float, pos_score: float, subreddit: str, post_url: str, permalink: str, body: str, author: str, created_date: str):
@@ -57,7 +72,7 @@ class API():
 
             db.commit()
         except Exception as e:
-            print(f"Comment insertion error:\n{e}")
+            print(f"Comment insertion error: {e}")
 
     @staticmethod
     def insert_stock(symbol: str, title: str, exchange: str):
@@ -76,4 +91,32 @@ class API():
             
             db.commit()
         except Exception as e:
-            print(f"Stock insertion error:\n{e}")
+            print(f"Stock insertion error: {e}")
+
+    @staticmethod
+    def insert_tweet(tweet: object):
+        """
+            Inserts a tweet.
+        """
+        try:
+            pool.execute(
+                Query.insert_tweet(),
+                (
+                    tweet["symbol"],
+                    tweet["url"],
+                    tweet["body"],
+                    tweet["author"],
+                    tweet["like_count"],
+                    tweet["retweet_count"],
+                    tweet["reply_count"],
+                    tweet["quote_count"],
+                    tweet["negative_score"],
+                    tweet["neutral_score"],
+                    tweet["positive_score"],
+                    tweet["date"]
+                )
+            )
+
+            db.commit()
+        except Exception as e:
+            print(f"Tweet insertion error: {e}")

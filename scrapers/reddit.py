@@ -5,6 +5,7 @@ from functions.valid_symbol import is_string_valid
 from functions.get_stock_data import get_stock_data
 from functions.sentiment_analyzis import analyze
 from functions.validate_comment import parse_comments
+from functions.remove_emojies import remove_emojies
 from models.comment import Comment
 
 class Reddit():
@@ -37,14 +38,15 @@ class Reddit():
         for comment in comments: self.process_body(comment, post_url)
     
     def process_body(self, comment: object, post_url: str) -> None:
-        for string in self.stripped_comment(comment):
+        body = remove_emojies(comment.body)
+        for string in self.stripped_comment(body):
             if is_string_valid(string):
                 self.data.append(
-                    Comment.create(comment, string, post_url)
+                    Comment.create(comment, string, post_url, body)
                 )
                 break
 
-    def stripped_comment(self, comment: object) -> str: return comment.body.strip().split(" ")
+    def stripped_comment(self, comment: object) -> str: return comment.strip().split(" ")
 
     def proccess_data(self):
         parsed_data = parse_comments(self.data)
@@ -56,7 +58,7 @@ class Reddit():
         l = len(parsed_data)
         progressbar(0, l, f"Proccessing {l} objects: ")
         for i, obj in enumerate(parsed_data):
-            # if symbol already is in db, skip fetching stock data
+
             result = API.get_stock(obj["symbol"])
             if result is None:
                 company_name, exchange = get_stock_data(obj["symbol"])  
@@ -69,7 +71,7 @@ class Reddit():
 
             try: scores = analyze(obj["comment_body"])
             except Exception as e:
-                print(f"Sentiment analyzis error:\n{e}")
+                print(f"Sentiment analyzis error: {e}")
                 continue
             
             API.insert_comment(
