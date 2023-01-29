@@ -11,6 +11,7 @@ class Comment():
         obj["comment_url"] = comment.permalink
         obj["comment_body"] = body
         obj["created_date"] = Comment.format_time(comment)
+        obj["likes"] = comment.score
 
         return obj
     

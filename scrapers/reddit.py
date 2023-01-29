@@ -1,5 +1,5 @@
 from scrapers.settings import reddit
-from db.controller import API
+from db.controller import API 
 from functions.progress_bar import progressbar
 from functions.valid_symbol import is_string_valid
 from functions.get_stock_data import get_stock_data
@@ -84,7 +84,8 @@ class Reddit():
                 obj["comment_url"],
                 obj["comment_body"],
                 obj["author"],
-                obj["created_date"]
+                obj["created_date"],
+                obj["likes"]
                 )
 
             progressbar(i + 1, l, None)

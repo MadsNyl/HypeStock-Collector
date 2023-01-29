@@ -7,6 +7,5 @@ CREATE TABLE tracking (
     price_change float,
     price_change_pct float,
     timing datetime,
-    PRIMARY KEY(symbol),
     FOREIGN KEY(symbol) REFERENCES stock(symbol)
 )

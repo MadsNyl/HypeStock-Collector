@@ -1,4 +1,4 @@
-from scrapers.twitter import Twitter
+from scrapers import Twitter
 import sys
 
 if __name__ == "__main__":
