@@ -10,46 +10,56 @@ from models.comment import Comment
 
 class Reddit():
 
-    subreddit: reddit.subreddit
-    limit: int
-    data: list[dict] = []
+    __subreddit: reddit.subreddit
+    __limit: int
+    __data: list[dict] = []
+    __analyze: bool
 
-    def __init__(self, subreddit, limit) -> None:
-        self.subreddit = reddit.subreddit(subreddit)
-        self.sub = subreddit
-        self.limit = limit
+    def __init__(self, subreddit: str, limit: int, analyze: bool) -> None:
+        self.__subreddit = reddit.subreddit(subreddit)
+        self.__sub = subreddit
+        self.__limit = limit
+        self.__analyze = analyze
     
     def run(self) -> None:
 
-        progressbar(0, self.limit, f"Collecting {self.limit} subreddits: ")
+        progressbar(0, self.__limit, f"Collecting {self.__limit} subreddits: ")
 
-        for i, sub in enumerate(self.get_subreddits()):
+        for i, sub in enumerate(self.__get_subreddits()):
             sub.comments.replace_more(limit=0)
 
             post_url = sub.permalink
 
-            self.process_comments(sub.comments.list(), post_url)
+            self.__process_comments(sub.comments.list(), post_url)
 
-            progressbar(i + 1, self.limit, None)       
+            progressbar(i + 1, self.__limit, None)       
 
-    def get_subreddits(self) -> list: return self.subreddit.hot(limit=self.limit)     
+    def __get_subreddits(self) -> list: return self.__subreddit.hot(limit=self.__limit)     
 
-    def process_comments(self, comments: list, post_url: str) -> None:
-        for comment in comments: self.process_body(comment, post_url)
+    def __process_comments(self, comments: list, post_url: str) -> None:
+        for comment in comments: self.__process_body(comment, post_url)
     
-    def process_body(self, comment: object, post_url: str) -> None:
+    def __process_body(self, comment: object, post_url: str) -> None:
         body = remove_emojies(comment.body)
-        for string in self.stripped_comment(body):
+        for string in self.__stripped_comment(body):
             if is_string_valid(string):
-                self.data.append(
+                self.__data.append(
                     Comment.create(comment, string, post_url, body)
                 )
                 break
 
-    def stripped_comment(self, comment: object) -> str: return comment.strip().split(" ")
+    def __stripped_comment(self, comment: object) -> str: return comment.strip().split(" ")
+
+    def __get_sentiment_scores(self, text: str) -> dict[str:float]:
+        if (self.__analyze): return analyze(text)
+        return {
+            "neg": None,
+            "neu": None,
+            "pos": None
+        }
 
     def proccess_data(self):
-        parsed_data = parse_comments(self.data)
+        parsed_data = parse_comments(self.__data)
 
         if len(parsed_data) == 0: 
             print("All comments allready registered.")
@@ -68,8 +78,8 @@ class Reddit():
             else: 
                 company_name = result[0][0]
                 exchange = result[0][1]
-
-            try: scores = analyze(obj["comment_body"])
+            
+            try: scores = self.__get_sentiment_scores(obj["comment_body"])
             except Exception as e:
                 print(f"Sentiment analyzis error: {e}")
                 continue
@@ -79,7 +89,7 @@ class Reddit():
                 scores["neg"], 
                 scores["neu"],
                 scores["pos"],
-                self.sub,
+                self.__sub,
                 obj["post_url"],
                 obj["comment_url"],
                 obj["comment_body"],
