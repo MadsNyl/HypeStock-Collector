@@ -17,6 +17,19 @@ class API():
         except Exception as e:
             print(f"Fetching all stocks error: {e}")
 
+    @staticmethod
+    def get_legacy_stocks():
+        """
+            Returns all stock that have not collected legacy data.
+        """
+        try:
+            pool.execute(
+                Query.get_legacy_stocks()
+            )
+
+            return pool.fetchall()
+        except Exception as e:
+            print(f"Fetching all legacy stocks error: {e}")
 
     @staticmethod
     def get_stock(symbol: str):
@@ -165,7 +178,22 @@ class API():
                 Query.insert_trackings(),
                 data
             )
-
+            
             db.commit()
         except Exception as e:
             print(f"Trackings insertion error: {e}")
+
+    @staticmethod
+    def update_legacy(symbol: str):
+        """
+            Updates legacy for a symbol to true.
+        """
+        try:
+            pool.execute(
+                Query.update_legacy(),
+                (symbol, )
+            )
+
+            db.commit()
+        except Exception as e:
+            print(f"Updating legacy error: {e}")

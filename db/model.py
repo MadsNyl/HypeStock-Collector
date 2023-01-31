@@ -7,6 +7,14 @@ class Query():
             SELECT symbol
             FROM stock
         """
+    
+    @staticmethod
+    def get_legacy_stocks() -> str:
+        return """
+            SELECT symbol
+            FROM stock 
+            WHERE legacy = false
+        """
 
     @staticmethod
     def get_stock() -> str:
@@ -71,4 +79,12 @@ class Query():
             INSERT INTO tracking
             (symbol, last_price, min_price, max_price, volume, timing, price_change, price_change_pct)
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+    
+    @staticmethod
+    def update_legacy() -> str:
+        return """
+            UPDATE stock
+            SET legacy = true
+            WHERE symbol = %s
         """

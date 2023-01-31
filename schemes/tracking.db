@@ -3,7 +3,7 @@ CREATE TABLE tracking (
     last_price float,
     min_price float,
     max_price float,
-    volume int,
+    volume bigint,
     price_change float,
     price_change_pct float,
     timing datetime,
