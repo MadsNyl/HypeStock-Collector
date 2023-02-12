@@ -16,6 +16,20 @@ class API():
             return pool.fetchall()
         except Exception as e:
             print(f"Fetching all stocks error: {e}")
+        
+    @staticmethod
+    def get_stock_info():
+        """
+            Returns all stocks with ticker and name.
+        """
+        try:
+            pool.execute(
+                Query.get_stock_info()
+            )
+
+            return pool.fetchall()
+        except Exception as e:
+            print(f"Fetching all stocks with info error: {e}")
 
     @staticmethod
     def get_legacy_stocks():

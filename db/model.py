@@ -9,6 +9,13 @@ class Query():
         """
     
     @staticmethod
+    def get_stock_info() -> str:
+        return """
+            SELECT symbol, name
+            FROM stock
+        """
+    
+    @staticmethod
     def get_legacy_stocks() -> str:
         return """
             SELECT symbol

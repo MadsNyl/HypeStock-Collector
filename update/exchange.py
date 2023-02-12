@@ -1,5 +1,5 @@
 from db.db import DB
-from functions.get_stock_data import get_stock_data
+from util.get_stock_data import get_stock_data
 
 db = DB()
 all_stocks = db.update_record()

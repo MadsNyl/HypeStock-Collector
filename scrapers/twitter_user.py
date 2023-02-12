@@ -1,11 +1,11 @@
 import snscrape.modules.twitter as sntwitter
 from db.db import DB
 from models.stock import Stock
-from functions.progress_bar import print_progress_bar, print_progress_bar_objects
-from functions.valid_symbol import is_string_valid
-from functions.get_stock_data import get_stock_data
-from functions.sentiment_analyzis import analyze
-from functions.insert import insert_stock, insert_tracking
+from util.progress_bar import print_progress_bar, print_progress_bar_objects
+from util.valid_symbol import is_string_valid
+from util.get_stock_data import get_stock_data
+from util.sentiment_analyzis import analyze
+from util.insert import insert_stock, insert_tracking
 from models.tweet import Tweet
 
 class TwitterUser():

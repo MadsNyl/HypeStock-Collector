@@ -1,5 +1,5 @@
 from update.settings import SYMBOL_LOOKUP_API
-from functions.progress_bar import progressbar
+from util.progress_bar import progressbar
 from db.controller import API
 import requests, re
 

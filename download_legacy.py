@@ -1,6 +1,6 @@
 from legacy import Legacy
 from db.controller import API
-from functions.progress_bar import progressbar
+from util.progress_bar import progressbar
 
 if __name__ == "__main__":
     symbols = API.get_legacy_stocks()

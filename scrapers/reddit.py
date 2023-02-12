@@ -1,11 +1,11 @@
 from scrapers.settings import reddit
 from db.controller import API 
-from functions.progress_bar import progressbar
-from functions.valid_symbol import is_string_valid
-from functions.get_stock_data import get_stock_data
-from functions.sentiment_analyzis import analyze
-from functions.validate_comment import parse_comments
-from functions.remove_emojies import remove_emojies
+from util.progress_bar import progressbar
+from util.valid_symbol import is_string_valid
+from util.get_stock_data import get_stock_data
+from util.sentiment_analyzis import analyze
+from util.validate_comment import parse_comments
+from util.remove_emojies import remove_emojies
 from models.comment import Comment
 
 class Reddit():

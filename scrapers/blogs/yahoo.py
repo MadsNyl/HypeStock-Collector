@@ -1,4 +1,4 @@
-from ..article import Article
+from .article import Article
 
 class Yahoo(Article):
 
@@ -25,6 +25,13 @@ class Yahoo(Article):
 
             title = tag.text
             text_body = body.find("div", class_="caas-body")
+            hits = super()._process_text_body(text_body.text)
+
+            if not len(hits): return
+
+            for hit in hits:
+                if hit["new"]: super()._insert_stock()
+                super()._insert_article()
 
     def __process_external_article(self, article: object) -> None:
         pass
