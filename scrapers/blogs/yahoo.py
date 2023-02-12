@@ -4,6 +4,7 @@ class Yahoo(Article):
 
     __ARTICLE_CLASS: str = "js-stream-content Pos(r)"
     __YAHOO_URL: str =  "https://finance.yahoo.com"
+    __PROVIDER: str = "yahoo finance"
 
     def __init__(self, base_url):
         super().__init__(base_url)
@@ -15,6 +16,7 @@ class Yahoo(Article):
     def __process_article(self, article: object) -> None:
             tag = article.find("a", href=True)
             url = self.__format_url(tag["href"])
+            print(url)
             body = super()._get_html(url)
             if not body: return
             external_url = self.__is_external_article(body)
@@ -24,14 +26,17 @@ class Yahoo(Article):
                 return
 
             title = tag.text
-            text_body = body.find("div", class_="caas-body")
-            hits = super()._process_text_body(text_body.text)
+            text_body = body.find("div", class_="caas-body").text
+            text_body = super()._strip_emojies(text_body)
+            hits = super()._process_text_body(text_body)
 
             if not len(hits): return
 
+            article_id = super()._insert_article(self.__PROVIDER, False, text_body, title, url, None)
+
             for hit in hits:
-                if hit["new"]: super()._insert_stock()
-                super()._insert_article()
+                if hit["new"]: super()._insert_stock(hit["ticker"])
+                super()._insert_article_stock(hit["ticker"], article_id)
 
     def __process_external_article(self, article: object) -> None:
         pass

@@ -1,7 +1,6 @@
-CREATE TABEL article_symbol.db (
+CREATE TABLE article_stock (
     symbol varchar(5),
     article_id int,
-    PIRMARY KEY(symbol, article_id),
     FOREIGN KEY(symbol) REFERENCES stock(symbol),
     FOREIGN KEY(article_id) REFERENCES article(id)
 )

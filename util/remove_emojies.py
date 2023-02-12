@@ -1,4 +1,4 @@
-import re
+import re, emoji
 
 def remove_emojies(text: str):
     """
@@ -26,3 +26,8 @@ def remove_emojies(text: str):
                 "]+", re.UNICODE)
                 
     return re.sub(emoj, '', text)
+
+def unicode_escape(chars, data_dict):
+    return chars.encode('unicode-escape').decode()
+
+def emoji_free_text(text: str) -> str: return emoji.replace_emoji(text, replace="")

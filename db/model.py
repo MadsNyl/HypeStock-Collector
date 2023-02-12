@@ -95,3 +95,19 @@ class Query():
             SET legacy = true
             WHERE symbol = %s
         """
+    
+    @staticmethod
+    def insert_article() -> str:
+        return """
+            INSERT INTO article
+            (provider, external, title, url, body, created_date)
+            VALUES(%s, %s, %s, %s, %s, %s)
+        """
+    
+    @staticmethod
+    def insert_article_stock() -> str:
+        return """
+            INSERT INTO article_stock
+            (symbol, article_id)
+            VALUES(%s, %s)
+        """
