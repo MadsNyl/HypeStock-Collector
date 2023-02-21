@@ -107,6 +107,21 @@ class API():
             return pool.fetchall()
         except Exception as e:
             print(f"Fetching comments error: {e}")
+        
+    @staticmethod
+    def get_article_url(url: str):
+        """
+            Checks for url match.
+        """
+        try:
+            pool.execute(
+                Query.get_article_url(),
+                (url, )
+            )
+
+            return pool.fetchone()
+        except Exception as e:
+            print(f"Fetching article url match error: {e}")
 
     @staticmethod
     def insert_comment(symbol: str, neg_score: float, neu_score: float, pos_score: float, subreddit: str, post_url: str, permalink: str, body: str, author: str, created_date: str, likes: int):

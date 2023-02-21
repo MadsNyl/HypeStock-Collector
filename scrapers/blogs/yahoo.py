@@ -1,4 +1,5 @@
 from .article import Article
+from util import progressbar
 
 class Yahoo(Article):
 
@@ -11,35 +12,43 @@ class Yahoo(Article):
 
     def run(self):
         articles = self.__get_all_articles()
-        for article in articles: self.__process_article(article)       
+        progressbar(0, len(articles), f"Processing {len(articles)} articles:")
+        for i, article in enumerate(articles): 
+            self.__process_article(article)
+            progressbar(i + 1, len(articles), None) 
 
     def __process_article(self, article: object) -> None:
             tag = article.find("a", href=True)
             url = self.__format_url(tag["href"])
-            print(url)
+
+            if super()._is_url_match(url): return
+
             body = super()._get_html(url)
             if not body: return
+
             external_url = self.__is_external_article(body)
 
-            if external_url: 
-                self.__process_external_article(article)
-                return
-
             title = tag.text
-            text_body = body.find("div", class_="caas-body").text
+
+            text_body = self._get_text_body(body)
+
+            datetime = body.find("time")
+
+            if external_url: text_body = self.__process_external_article(text_body)
             text_body = super()._strip_emojies(text_body)
             hits = super()._process_text_body(text_body)
 
             if not len(hits): return
 
-            article_id = super()._insert_article(self.__PROVIDER, False, text_body, title, url, None)
+            article_id = super()._insert_article(self.__PROVIDER, False, text_body, title, url, datetime)
 
             for hit in hits:
                 if hit["new"]: super()._insert_stock(hit["ticker"])
                 super()._insert_article_stock(hit["ticker"], article_id)
+    
+    def _get_text_body(body: object) -> str: body.find("div", class_="caas-body").text
 
-    def __process_external_article(self, article: object) -> None:
-        pass
+    def __process_external_article(self, text: str) -> str: return text.replace("continue reading", "") 
 
     def __is_external_article(self, body: object) -> str:
         continue_button = body.find(lambda a: a.name == "a" and a.text.lower() == "continue reading")

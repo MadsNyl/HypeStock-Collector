@@ -49,6 +49,14 @@ class Query():
         """
     
     @staticmethod
+    def get_article_url() -> str:
+        return """
+            SELECT url
+            FROM article
+            WHERE url = %s
+        """
+    
+    @staticmethod
     def get_comments(length: int) -> str:
         return f"""
             SELECT permalink

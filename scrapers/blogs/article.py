@@ -36,6 +36,10 @@ class Article():
 
     def __analyze_text(self, text: list[str]) -> list[dict]:
         hits = []
+
+        # if self.__is_name_match(text.lower()) is not None: 
+        #     if 
+
         for word in text:
             if word in [i["ticker"] for i in hits]: continue
 
@@ -55,7 +59,7 @@ class Article():
         
         return hits
     
-    def _strip_emojies(self, text: str) -> str: return emoji_free_text(text)
+    def _strip_emojies(self, text: str) -> str: return emoji_free_text(text)     
 
     def _process_text_body(self, text: str) -> list[dict]:
         body = emoji_free_text(text)
@@ -76,14 +80,19 @@ class Article():
         
         return results
 
-    def __is_db_match(self, word: str) -> bool: return word in self.STOCK_NAMES or word in self.STOCK_SYMBOLS
+    def __is_db_match(self, word: str) -> bool: return word in self.STOCK_SYMBOLS
+
+    def __is_name_match(self, words: list[str]) -> bool:
+        for name in self.STOCK_SYMBOLS:
+            if name.lower() in words: return name
+        return None
+    
+    def _is_url_match(self, url: str) -> bool: return API.get_article_url(url) is not None
 
     def _insert_stock(self, stock: str) -> None:
         name, exchange = get_stock_data(stock)
         API.insert_stock(stock, name, exchange)
 
-    def _insert_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int:
-        return API.insert_article(provider, external, title, url, body, created_date)
+    def _insert_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return API.insert_article(provider, external, title, url, body, created_date)
     
-    def _insert_article_stock(self, symbol: str, article_id: int) -> None:
-        API.insert_article_stock(symbol, article_id)
+    def _insert_article_stock(self, symbol: str, article_id: int) -> None: API.insert_article_stock(symbol, article_id)
