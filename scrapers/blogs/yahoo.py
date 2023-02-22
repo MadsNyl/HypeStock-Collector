@@ -29,24 +29,27 @@ class Yahoo(Article):
             external_url = self.__is_external_article(body)
 
             title = tag.text
-
             text_body = self._get_text_body(body)
 
-            datetime = body.find("time")
+            datetime = self._get_datetime(body)
 
-            if external_url: text_body = self.__process_external_article(text_body)
             text_body = super()._strip_emojies(text_body)
             hits = super()._process_text_body(text_body)
 
             if not len(hits): return
 
-            article_id = super()._insert_article(self.__PROVIDER, False, text_body, title, url, datetime)
+            if external_url is not None: article_id = super()._insert_external_article(self.__PROVIDER, True, text_body, title, url, datetime)
+            else: article_id = super()._insert_article(self.__PROVIDER, False, text_body, title, url, datetime)
 
             for hit in hits:
                 if hit["new"]: super()._insert_stock(hit["ticker"])
                 super()._insert_article_stock(hit["ticker"], article_id)
     
-    def _get_text_body(body: object) -> str: body.find("div", class_="caas-body").text
+    def _get_datetime(self, body: object) -> str:
+        datetime = body.find("time")
+        return datetime["datetime"][:-5]
+    
+    def _get_text_body(self, body: object) -> str: return body.find("div", class_="caas-body").text
 
     def __process_external_article(self, text: str) -> str: return text.replace("continue reading", "") 
 

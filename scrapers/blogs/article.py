@@ -94,5 +94,7 @@ class Article():
         API.insert_stock(stock, name, exchange)
 
     def _insert_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return API.insert_article(provider, external, title, url, body, created_date)
+
+    def _insert_external_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return API.insert_article(provider, external, title, url, body, created_date)
     
     def _insert_article_stock(self, symbol: str, article_id: int) -> None: API.insert_article_stock(symbol, article_id)

@@ -1,3 +1,3 @@
-test = None
+test = "2023-02-22T18:30:00.000Z"
 
-print(test is not None)
+print(test[:-5])
