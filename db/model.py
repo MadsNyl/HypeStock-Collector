@@ -7,6 +7,13 @@ class Query():
             SELECT symbol
             FROM stock
         """
+
+    @staticmethod
+    def get_subreddits() -> str:
+        return """
+            SELECT DISTINCT subreddit
+            FROM comment
+        """
     
     @staticmethod
     def get_stock_info() -> str:

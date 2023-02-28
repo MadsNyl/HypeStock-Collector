@@ -107,6 +107,20 @@ class API():
             return pool.fetchall()
         except Exception as e:
             print(f"Fetching comments error: {e}")
+    
+    @staticmethod
+    def get_subreddits():
+        """
+            Gets all subreddits.
+        """
+        try:
+            pool.execute(
+                Query.get_subreddits()
+            )
+
+            return pool.fetchall()
+        except Exception as e:
+            print(f"Fetching all subreddists error: {e}")
         
     @staticmethod
     def get_article_url(url: str):
