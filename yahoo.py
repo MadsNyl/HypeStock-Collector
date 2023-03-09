@@ -1,4 +1,4 @@
-from scrapers import Yahoo
+from social_media import Yahoo
 
 if __name__ == "__main__":
     a = Yahoo(

@@ -1,4 +1,4 @@
-from scrapers.settings import reddit
+from social_media.settings import reddit
 from db.controller import API 
 from util.progress_bar import progressbar
 from util.valid_symbol import is_string_valid

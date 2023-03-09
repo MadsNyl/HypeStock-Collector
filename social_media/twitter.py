@@ -2,7 +2,7 @@ import snscrape.modules.twitter as sntwitter
 import tweepy
 from db.controller import API
 from models.stock import Stock
-from scrapers.settings import twitter
+from social_media.settings import twitter
 from util.progress_bar import progressbar
 from util.valid_symbol import is_string_valid
 from util.get_stock_data import get_stock_data

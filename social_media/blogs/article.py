@@ -12,9 +12,9 @@ class Article():
 
     def __init__(self, base_url: str):
         self.BASE_URL = base_url
-        self.__get_stock_info()
+        self._get_stock_info()
     
-    def __get_stock_info(self) -> None:
+    def _get_stock_info(self) -> None:
         stock_info = API.get_stock_info()
         self.STOCK_SYMBOLS = [i[0] for i in stock_info]
         self.STOCK_NAMES = [i[1] for i in stock_info]

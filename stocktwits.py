@@ -1,5 +1,5 @@
 import sys
-from scrapers import StockTwits
+from social_media import StockTwits
 
 if __name__ == "__main__":
     s = StockTwits()

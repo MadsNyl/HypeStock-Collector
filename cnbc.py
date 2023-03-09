@@ -1,4 +1,4 @@
-from scrapers import CNBC
+from social_media import CNBC
 
 if __name__ == "__main__":
     a = CNBC(
