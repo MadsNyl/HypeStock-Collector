@@ -65,8 +65,21 @@ class ArticleCrawler(Article):
             "datetime": body.find("time")["datetime"][:-5]
         }
     
-    def _handle_cnbc(self, url: str) -> None:
-        print(f"CNBC: {url}")
+    def _handle_cnbc(self, url: str) -> dict:
+        body = super()._get_html(url)
+        try:
+            text_body = super()._strip_emojies(body.find("div", class_="ArticleBody-articleBody").text)
+            return {
+                "url": url,
+                "provider": "cnbc",
+                "title": body.find("h1", class_="ArticleHeader-headline").text,
+                "text_body": text_body,
+                "hits": super()._process_text_body(text_body),
+                "datetime": body.find("time")["datetime"][:-5]
+            }
+        except Exception as e:
+            print(url)
+            return None
 
     def _get_anchor_tags(self, url: str) -> list[str]:
         base_page = super()._get_html(url)
