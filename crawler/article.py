@@ -1,6 +1,8 @@
 from db import API
 from social_media import Article
 from bs4 import BeautifulSoup
+from datetime import datetime
+import re
 
 class ArticleCrawler(Article):
 
@@ -17,7 +19,7 @@ class ArticleCrawler(Article):
 
     def _crawl_page(self, url: str) -> None:
         anchors = self._get_anchor_tags(url)
-        anchors = self._filter_news(anchors)
+        anchors = self._filter_links(anchors)
         anchors = self._add_base_urls(anchors, url)
         for article in anchors: self._crawl_article(article)
     
@@ -26,9 +28,11 @@ class ArticleCrawler(Article):
         
         match state:
             case "finance.yahoo.com":
-                data = self._handle_yahoo(url)
+                data = self._handle_yahoo(url) 
             case "www.cnbc.com":
                 data = self._handle_cnbc(url)
+            case "edition.cnn.com":
+                data = self._handle_cnn(url)
             case _:
                 data = None
 
@@ -80,6 +84,27 @@ class ArticleCrawler(Article):
         except Exception as e:
             print(url)
             return None
+    
+    def _handle_cnn(self, url: str) -> dict:
+        body = super()._get_html(url)
+        try: 
+            text_body = super()._strip_emojies(body.find("main", class_="article__main").text)
+            date_text = body.find("div", class_="timestamp").text.replace("Updated", "").strip("\t").strip()
+            print(date_text)
+            date = f"{date_text[18:21]} {date_text[24:26]} {date_text[28:32]}"
+            date = datetime.strptime(date, "%b %d %Y").date()
+            print(str(date))
+            return {
+                "url": url,
+                "provider": "cnn",
+                "title": body.find("h1", class_="headline__text").text,
+                "text_body": text_body,
+                "hits": super()._process_text_body(text_body),
+                "datetime": None
+            }
+        except Exception as e:
+            print(e)
+            print(url)
 
     def _get_anchor_tags(self, url: str) -> list[str]:
         base_page = super()._get_html(url)
@@ -96,6 +121,11 @@ class ArticleCrawler(Article):
 
     def _add_base_url(self, url: str) -> str: return f"https://{self._get_base_url(url)}"
     
-    def _filter_news(self, urls, tag=".html") -> str: return list(filter(lambda x: x.endswith(tag), urls))
+    def _filter_news(self, urls, tag=".html") -> list[str]: return list(filter(lambda x: x.endswith(tag), urls))
 
-    def _filter_links(self, urls, tag) -> str: return list(filter(lambda x: x.startswith(tag), urls))     
+    def _filter_links(self, urls) -> list[str]: 
+        html = self._filter_news(urls)
+        date = self._filter_links_date(urls)
+        return html + date
+
+    def _filter_links_date(self, urls) -> list[str]: return list(filter(lambda x: re.compile(r"/([0-9]+(/[0-9]+)+)/", re.IGNORECASE).match(x), urls)) 
