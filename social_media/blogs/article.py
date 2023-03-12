@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from db import API
+from db import INSERT, GET
 from ..settings import USER_AGENT
 from util import is_string_valid, get_stock_data, emoji_free_text
 
@@ -15,7 +15,7 @@ class Article():
         self._get_stock_info()
     
     def _get_stock_info(self) -> None:
-        stock_info = API.get_stock_info()
+        stock_info = GET.stock_info()
         self.STOCK_SYMBOLS = [i[0] for i in stock_info]
         self.STOCK_NAMES = [i[1] for i in stock_info]
         
@@ -89,14 +89,14 @@ class Article():
             if name.lower() in words: return name
         return None
     
-    def _is_url_match(self, url: str) -> bool: return API.get_article_url(url) is not None
+    def _is_url_match(self, url: str) -> bool: return GET.article_url(url) is not None
 
     def _insert_stock(self, stock: str) -> None:
         name, exchange = get_stock_data(stock)
-        API.insert_stock(stock, name, exchange)
+        INSERT.stock(stock, name, exchange)
 
-    def _insert_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return API.insert_article(provider, external, title, url, body, created_date)
+    def _insert_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return INSERT.article(provider, external, title, url, body, created_date)
 
-    def _insert_external_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return API.insert_article(provider, external, title, url, body, created_date)
+    def _insert_external_article(self, provider: str, external: bool, body: str, title: str, url: str, created_date: str) -> int: return INSERT.article(provider, external, title, url, body, created_date)
     
-    def _insert_article_stock(self, symbol: str, article_id: int) -> None: API.insert_article_stock(symbol, article_id)
+    def _insert_article_stock(self, symbol: str, article_id: int) -> None: INSERT.article_stock(symbol, article_id)
