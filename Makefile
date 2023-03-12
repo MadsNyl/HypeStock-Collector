@@ -1,3 +1,6 @@
+insertstocks:
+	python stocks.py
+
 reddit:
 	python reddit.py ${args}
 
@@ -9,3 +12,6 @@ yahoo:
 
 article_crawl:
 	python article_crawl.py
+
+tracking:
+	python tracking.py

@@ -1,6 +1,4 @@
 import requests
-headers = {"User-Agent": "Comment Extraction"}
-try:
-    res = requests.get("https://www.nasdaq.com", timeout=1)
-except Exception as e:
-    print("error")
+
+res = requests.get("https://raw.githubusercontent.com/rreichel3/US-Stock-Symbols/main/amex/amex_full_tickers.json")
+print(res.text)

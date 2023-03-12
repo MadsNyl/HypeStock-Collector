@@ -62,3 +62,24 @@ class INSERT():
             db.commit()
         except Exception as e:
             print(f"Inserting article_stock error: {e}")
+        
+    @staticmethod
+    def tracking(symbol: str, last_price: float, volume: int, marketcap: int, price_change_pct: float):
+        """
+            Inserts a tracking of stockprice.
+        """
+        try:
+            pool.execute(
+                Query.insert_tracking(),
+                (
+                    symbol,
+                    last_price,
+                    volume,
+                    marketcap,
+                    price_change_pct
+                )
+            )
+
+            db.commit()
+        except Exception as e:
+            print(f"Inserting tracking error: {e}")

@@ -126,3 +126,11 @@ class Query():
             (symbol, article_id)
             VALUES(%s, %s)
         """
+
+    @staticmethod
+    def insert_tracking() -> str:
+        return """
+            INSERT INTO tracking
+            (symbol, last_price, volume, marketcap, price_change_pct)
+            VALUES (%s, %s, %s, %s, %s)
+        """
