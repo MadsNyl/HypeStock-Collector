@@ -31,3 +31,31 @@ class GET():
             return pool.fetchall()
         except Exception as e:
             print(f"Fetching all stocks with info error: {e}")
+    
+    @staticmethod
+    def tickers():
+        """
+            Returns all tickers.
+        """
+        try:
+            pool.execute(
+                Query.get_stocks()
+            )
+
+            return dict.fromkeys(list(map(lambda x: x[0], pool.fetchall())))
+        except Exception as e:
+            print(f"Fetching all tickers error: {e}")
+    
+    @staticmethod
+    def comment_urls():
+        """
+            Returns all comment urls.
+        """
+        try:
+            pool.execute(
+                Query.get_comment_urls()
+            )
+
+            return dict.fromkeys(list(map(lambda x: x[0], pool.fetchall())))
+        except Exception as e:
+            print(f"Fetching comment urls error: {e}")

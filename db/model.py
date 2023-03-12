@@ -72,6 +72,13 @@ class Query():
         """
     
     @staticmethod
+    def get_comment_urls() -> str:
+        return """
+            SELECT permalink
+            FROM comment
+        """
+
+    @staticmethod
     def insert_comment() -> str:
         return """
             INSERT INTO comment
