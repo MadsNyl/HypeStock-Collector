@@ -16,7 +16,7 @@ class Article():
     
     def _get_stock_info(self) -> None:
         stock_info = GET.stock_info()
-        self.STOCK_SYMBOLS = [i[0] for i in stock_info]
+        self.STOCK_SYMBOLS = dict.fromkeys([i[0] for i in stock_info])
         self.STOCK_NAMES = [i[1] for i in stock_info]
         
     def _get_html(self, url: str) -> str:
@@ -45,20 +45,13 @@ class Article():
         for word in text:
             if word in [i["ticker"] for i in hits]: continue
 
-            if self.__is_db_match(word):
+            if word in self.STOCK_SYMBOLS:
                 hits.append({
                     "ticker": word,
                     "new": False
                 })
                 continue
-
-            if is_string_valid(word):
-                hits.append({
-                    "ticker": word,
-                    "new": True
-                })
-                continue
-        
+    
         return hits
     
     def _strip_emojies(self, text: str) -> str: return emoji_free_text(text)     
@@ -71,14 +64,7 @@ class Article():
         
     def __parsed_hits(self, hits: list[dict]) -> list[dict]:
         results = []
-        for hit in hits:
-
-            if hit["ticker"] in self.STOCK_SYMBOLS:
-                results.append(hit)
-                continue
-
-            name, exchange = get_stock_data(hit["ticker"])
-            if name is not None and exchange is not None: results.append(hit)
+        for hit in hits: results.append(hit)
         
         return results
 

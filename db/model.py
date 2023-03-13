@@ -79,6 +79,13 @@ class Query():
         """
 
     @staticmethod
+    def get_article_urls() -> str:
+        return """
+            SELECT url
+            FROM article
+        """
+
+    @staticmethod
     def insert_comment() -> str:
         return """
             INSERT INTO comment

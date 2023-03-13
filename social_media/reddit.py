@@ -11,9 +11,7 @@ from datetime import datetime
 
 class Reddit():
 
-    # __subreddit: reddit.subreddit
     __limit: int
-    __data: list[dict] = []
     __analyze: bool
     _comments: list[object] = []
     _tickers: dict[str: None]
@@ -95,46 +93,3 @@ class Reddit():
             "neu": None,
             "pos": None
         }
-
-    def proccess_data(self):
-        parsed_data = parse_comments(self.__data)
-
-        if len(parsed_data) == 0: 
-            print("All comments allready registered.")
-            return
-
-        l = len(parsed_data)
-        progressbar(0, l, f"Proccessing {l} objects: ")
-        for i, obj in enumerate(parsed_data):
-
-            result = API.get_stock(obj["symbol"])
-            if result is None:
-                company_name, exchange = get_stock_data(obj["symbol"])  
-                if company_name is None: continue
-                else: API.insert_stock(obj["symbol"], company_name, exchange)
-            
-            else: 
-                company_name = result[0][0]
-                exchange = result[0][1]
-            
-            try: scores = self.__get_sentiment_scores(obj["comment_body"])
-            except Exception as e:
-                print(f"Sentiment analyzis error: {e}")
-                continue
-            
-            API.insert_comment(
-                obj["symbol"], 
-                scores["neg"], 
-                scores["neu"],
-                scores["pos"],
-                self.__sub,
-                obj["post_url"],
-                obj["comment_url"],
-                obj["comment_body"],
-                obj["author"],
-                obj["created_date"],
-                obj["likes"]
-                )
-
-            progressbar(i + 1, l, None)
-            

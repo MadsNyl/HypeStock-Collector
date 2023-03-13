@@ -59,3 +59,31 @@ class GET():
             return dict.fromkeys(list(map(lambda x: x[0], pool.fetchall())))
         except Exception as e:
             print(f"Fetching comment urls error: {e}")
+    
+    @staticmethod
+    def article_urls():
+        """
+            Returns all article urls.
+        """
+        try:
+            pool.execute(
+                Query.get_article_urls()
+            )
+
+            return dict.fromkeys(list(map(lambda x: x[0], pool.fetchall())))
+        except Exception as e:
+            print(f"Fetching all article urls error: {e}")
+    
+    @staticmethod
+    def subreddits():
+        """
+            Returns all subdreddits.
+        """
+        try:
+            pool.execute(
+                Query.get_subreddits()
+            )
+
+            return pool.fetchall()
+        except Exception as e:
+            print(f"Fetching all subreddists error: {e}")

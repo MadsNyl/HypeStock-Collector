@@ -10,7 +10,7 @@ update_tracking:
 yahoo:
 	python yahoo.py
 
-article_crawl:
+article:
 	python article_crawl.py
 
 tracking:

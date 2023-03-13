@@ -1,29 +1,34 @@
-from db import API
+from db import API, GET
 from social_media import Article
 from bs4 import BeautifulSoup
 from datetime import datetime
 from .scraper import ArticleScraper
+from util import progressbar
 import re
 
 class ArticleCrawler(Article):
 
     scraper: ArticleScraper = ArticleScraper()
     URLS: list[str]
+    article_urls: dict[str: None]
 
     def __init__(self, urls: list[str]):
         super()._get_stock_info()
         self.URLS = urls
+        self.article_urls = GET.article_urls()
     
     def run(self) -> None:
-        for url in self.URLS:
-            print(f"Crawling {url}")
-            self._crawl_page(url)
+        for url in self.URLS: self._crawl_page(url)
 
     def _crawl_page(self, url: str) -> None:
         anchors = self._get_anchor_tags(url)
         anchors = self._filter_links(anchors)
         anchors = self._add_base_urls(anchors, url)
-        for article in anchors: self._crawl_article(article)
+        
+        progressbar(0, len(anchors), f"\nCrawling {len(anchors)} articles from {url}: ")
+        for i, article in enumerate(anchors): 
+            self._crawl_article(article)
+            progressbar(i + 1, len(anchors), None)
     
     def _crawl_article(self, url: str) -> None:
         state = self._get_base_url(url)
@@ -45,7 +50,7 @@ class ArticleCrawler(Article):
     def _handle_data(self, data: dict) -> None:
         if data is None: return
         if not len(data["hits"]): return
-        if super()._is_url_match(data["url"]): return
+        if data["url"] in self.article_urls: return
 
         article_id = super()._insert_article(
             data["provider"],
@@ -57,56 +62,8 @@ class ArticleCrawler(Article):
         )
 
         for hit in data["hits"]:
-            if hit["new"]: super()._insert_stock(hit["ticker"])
+            # if hit["new"]: super()._insert_stock(hit["ticker"])
             super()._insert_article_stock(hit["ticker"], article_id)
-
-
-    def _handle_yahoo(self, url: str) -> dict:
-        body = super()._get_html(url)
-        text_body = super()._strip_emojies(body.find("div", class_="caas-body").text)
-        return {
-            "url": url,
-            "provider": "yahoo finance",
-            "title": body.find("div", class_="caas-title-wrapper").find("h1").text,
-            "text_body": text_body,
-            "hits": super()._process_text_body(text_body),
-            "datetime": body.find("time")["datetime"][:-5]
-        }
-    
-    def _handle_cnbc(self, url: str) -> dict:
-        body = super()._get_html(url)
-        try:
-            text_body = super()._strip_emojies(body.find("div", class_="ArticleBody-articleBody").text)
-            return {
-                "url": url,
-                "provider": "cnbc",
-                "title": body.find("h1", class_="ArticleHeader-headline").text,
-                "text_body": text_body,
-                "hits": super()._process_text_body(text_body),
-                "datetime": body.find("time")["datetime"][:-5]
-            }
-        except Exception as e:
-            print(url)
-            return None
-    
-    def _handle_cnn(self, url: str) -> dict:
-        body = super()._get_html(url)
-        try: 
-            text_body = super()._strip_emojies(body.find("div", class_="article__content-container").text).strip()
-            date_text = body.find("div", class_="timestamp").text.replace("Updated", "").replace("Published", "").strip()
-            date = f"{date_text[17:20]} {date_text[23:25]} {date_text[27:31]}"
-            date = datetime.strptime(date, "%b %d %Y").date()
-            return {
-                "url": url,
-                "provider": "cnn",
-                "title": body.find("h1", class_="headline__text").text,
-                "text_body": text_body,
-                "hits": super()._process_text_body(text_body),
-                "datetime": date
-            }
-        except Exception as e:
-            print(e)
-            print(url)
 
     def _get_anchor_tags(self, url: str) -> list[str]:
         base_page = super()._get_html(url)
