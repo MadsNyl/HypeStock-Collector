@@ -37,6 +37,15 @@ class Query():
             FROM stock
             WHERE symbol = %s
         """
+
+    @staticmethod
+    def get_last_tracking_date() -> str:
+        return """
+            SELECT timing
+            FROM tracking 
+            ORDER BY timing DESC
+            LIMIT 1
+        """
     
     @staticmethod
     def get_tracking() -> str:

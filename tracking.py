@@ -1,15 +1,31 @@
 import requests
-from db import INSERT
+from db import INSERT, GET
 from util import progressbar
+from datetime import datetime
+
+SYMBOLS = GET.tickers()
 
 def get_data(url: str) -> list:
     res = requests.get(url)
     return res.json()
+
+def check_timing() -> bool:
+    LAST_TRACKING_DATE = str(GET.last_tracking_date()[0])[:10]
+    now = str(datetime.now())[:10]
+    return LAST_TRACKING_DATE == now
     
 def main(url: str, exchange: str) -> None:
+    if check_timing(): return
     json = get_data(url)
     progressbar(0, len(json), f"Inserting trackings from {exchange}: ")
     for i, object in enumerate(json):
+        if object["symbol"] not in SYMBOLS:
+            INSERT.stock(
+                object["symbol"],
+                object["name"],
+                exchange
+            )
+
         INSERT.tracking(
             symbol=object["symbol"],
             last_price=float(object["lastsale"][1:]) if len(object["lastsale"][1:]) else None,

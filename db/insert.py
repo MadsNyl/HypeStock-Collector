@@ -83,6 +83,7 @@ class INSERT():
             db.commit()
         except Exception as e:
             print(f"Inserting tracking error: {e}")
+            print(symbol)
     
     @staticmethod
     def comment(symbol: str, neg_score: float, neu_score: float, pos_score: float, subreddit: str, post_url: str, permalink: str, body: str, author: str, created_date: str, likes: int):

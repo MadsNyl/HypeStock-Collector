@@ -87,3 +87,17 @@ class GET():
             return pool.fetchall()
         except Exception as e:
             print(f"Fetching all subreddists error: {e}")
+    
+    @staticmethod
+    def last_tracking_date():
+        """
+            Returns last tracking date added.
+        """
+        try:
+            pool.execute(
+                Query.get_last_tracking_date()
+            )
+
+            return pool.fetchone()
+        except Exception as e:
+            print(f"Fetching tracking error: {e}")
