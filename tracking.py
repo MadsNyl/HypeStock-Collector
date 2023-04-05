@@ -4,13 +4,13 @@ from util import progressbar
 from datetime import datetime
 
 SYMBOLS = GET.tickers()
+LAST_TRACKING_DATE = str(GET.last_tracking_date()[0])[:10]
 
 def get_data(url: str) -> list:
     res = requests.get(url)
     return res.json()
 
 def check_timing() -> bool:
-    LAST_TRACKING_DATE = str(GET.last_tracking_date()[0])[:10]
     now = str(datetime.now())[:10]
     return LAST_TRACKING_DATE == now
     

@@ -78,3 +78,25 @@ class ArticleScraper(Article):
             print(e)
             print(url)
             return None
+    
+    def ft(self, url: str) -> dict:
+        body = super()._get_html(url)
+        try:
+            need_subscription = body.find("a", class_="o-subs-card__select-button")
+            if need_subscription: return None
+
+            text_body = super()._strip_emojies(body.find("div", class_="article__content").text).strip()
+
+            return {
+                "url": url,
+                "provider": "financial times",
+                "title": body.find("span", class_="article-classifier__gap").text,
+                "text_body": text_body,
+                "hits": super()._process_text_body(text_body),
+                "datetime": body.find("time")["datetime"][:-5]
+            }
+
+        except Exception as e:
+            print(e)
+            print(url)
+            return None

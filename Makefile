@@ -4,6 +4,9 @@ insertstocks:
 reddit:
 	python reddit.py ${args}
 
+pushshift:
+	python pushshift.py ${args}
+
 update_tracking:
 	python update_trackings.py
 

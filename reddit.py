@@ -1,18 +1,16 @@
 import sys
 from social_media import Reddit
-from db import API, GET
+from db import GET
 
 
 def main():
     subs = GET.subreddits()
     subs = list(map(lambda x: x[0], subs))
     count = 5
-    analyze = False
 
-    if len(sys.argv) > 1: analyze = sys.argv[1].lower() == "true"
-    if len(sys.argv) > 2: count = sys.argv[2] 
+    if len(sys.argv) > 1: count = sys.argv[1] 
 
-    b = Reddit(subs, count, analyze)
+    b = Reddit(subs, count)
     b.run()
 
 if __name__ == "__main__": main()

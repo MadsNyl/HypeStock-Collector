@@ -1,26 +1,19 @@
 from social_media.settings import reddit
-from db import API, GET, INSERT  
+from db import GET, INSERT  
 from util.progress_bar import progressbar
-from util.valid_symbol import is_string_valid
-from util.get_stock_data import get_stock_data
-from util.sentiment_analyzis import analyze
-from util.validate_comment import parse_comments
 from util.remove_emojies import remove_emojies
-from models.comment import Comment
 from datetime import datetime
 
 class Reddit():
 
     __limit: int
-    __analyze: bool
     _comments: list[object] = []
     _tickers: dict[str: None]
     _comment_urls: dict[str: None]
 
-    def __init__(self, subreddits: list[str], limit: int, analyze: bool) -> None:
+    def __init__(self, subreddits: list[str], limit: int) -> None:
         self.__subs = subreddits
         self.__limit = limit
-        self.__analyze = analyze
         self._tickers = GET.tickers()
         self._comment_urls = GET.comment_urls()
     
@@ -87,7 +80,7 @@ class Reddit():
     def __stripped_comment(self, comment: object) -> str: return comment.strip().split(" ")
 
     def __get_sentiment_scores(self, text: str) -> dict[str:float]:
-        if (self.__analyze): return analyze(text)
+        # if (self.__analyze): return analyze(text)
         return {
             "neg": None,
             "neu": None,

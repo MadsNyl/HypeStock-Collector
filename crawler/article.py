@@ -1,7 +1,5 @@
-from db import API, GET
+from db import GET
 from social_media import Article
-from bs4 import BeautifulSoup
-from datetime import datetime
 from .scraper import ArticleScraper
 from util import progressbar
 import re
@@ -24,7 +22,7 @@ class ArticleCrawler(Article):
         anchors = self._get_anchor_tags(url)
         anchors = self._filter_links(anchors)
         anchors = self._add_base_urls(anchors, url)
-        
+
         progressbar(0, len(anchors), f"\nCrawling {len(anchors)} articles from {url}: ")
         for i, article in enumerate(anchors): 
             self._crawl_article(article)
@@ -42,6 +40,8 @@ class ArticleCrawler(Article):
                 data = self.scraper.cnn(url)
             case "www.nasdaq.com":
                 data = self.scraper.nasdaq(url)
+            case "www.ft.com":
+                data = self.scraper.ft(url)
             case _:
                 data = None
 
@@ -84,10 +84,13 @@ class ArticleCrawler(Article):
 
     def _filter_links_article(self, urls: list[str]) -> list[str]: return list(filter(lambda x: "/articles/" in x, urls))
 
+    def _filter_links_content(self, urls: list[str]) -> list[str]: return list(filter(lambda x: "/content/" in x, urls))
+
     def _filter_links(self, urls) -> list[str]: 
         html = self._filter_news(urls)
         date = self._filter_links_date(urls)
         article = self._filter_links_article(urls)
-        return list(set(html + date + article))
+        content = self._filter_links_content(urls)
+        return list(set(html + date + article + content))
 
     def _filter_links_date(self, urls) -> list[str]: return list(filter(lambda x: re.compile(r"/([0-9]+(/[0-9]+)+)/", re.IGNORECASE).match(x), urls)) 
