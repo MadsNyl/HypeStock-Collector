@@ -40,15 +40,15 @@ def process_body(comment: dict, subreddit: str) -> None:
 def main():
     subs = GET.subreddits()
     subs = list(map(lambda x: x[0], subs))
-    count = 250
-    days = 100
+    count = 500
+    days = 300
 
     if len(sys.argv) > 1: count = sys.argv[1] 
 
     for sub in subs: 
         while days > 2: 
             comments(sub, count, days, days - 1) 
-            days -= 2
-        days = 100
+            days -= 1
+        days = 300
 
 if __name__ == "__main__": main()

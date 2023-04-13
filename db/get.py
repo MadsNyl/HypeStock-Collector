@@ -33,6 +33,20 @@ class GET():
             print(f"Fetching all stocks with info error: {e}")
     
     @staticmethod
+    def legacy_stocks():
+        """
+            Returns all stocks that have not collected legacy data.
+        """
+        try:
+            pool.execute(
+                Query.get_legacy_stocks()
+            )
+
+            return pool.fetchall()
+        except Exception as e:
+            print(f"Fetching all legacy stocks error: {e}")
+    
+    @staticmethod
     def tickers():
         """
             Returns all tickers.

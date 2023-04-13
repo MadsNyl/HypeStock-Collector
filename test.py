@@ -1,4 +1,10 @@
-t = "/r/StockMarket/comments/12arash/check_this_out/jeu4pyb/"
+import time, datetime
 
-split = t.split("/")
-print("/".join(split[:-2]))
+first = "2020-01-02"
+second = "2020-01-03"
+
+first_object = datetime.datetime.strptime(first, "%Y-%m-%d").date()
+second_object = datetime.datetime.strptime(second, "%Y-%m-%d").date()
+
+diff = second_object - first_object
+print(diff.days)

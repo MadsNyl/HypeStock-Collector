@@ -86,6 +86,45 @@ class INSERT():
             print(symbol)
     
     @staticmethod
+    def legacy(symbol: str, last_price: float, volume: int, marketcap: int, price_change_pct: float, timing: str):
+        """
+            Inserts a legacy tracking of stockprice.
+        """
+        try:
+            pool.execute(
+                Query.insert_legacy(),
+                (
+                    symbol,
+                    last_price,
+                    volume,
+                    marketcap,
+                    price_change_pct,
+                    timing
+                )
+            )
+
+            db.commit()
+        except Exception as e:
+            print(f"Inserting legacy error: {e}")
+    
+    @staticmethod
+    def legacy_bulk(data: list):
+        """
+            Inserts a legacy tracking of stockprice.
+        """
+        try:
+            pool.execute(
+                Query.insert_legacy(),
+                (
+                    data
+                )
+            )
+
+            db.commit()
+        except Exception as e:
+            print(f"Inserting legacy error: {e}")
+    
+    @staticmethod
     def comment(symbol: str, neg_score: float, neu_score: float, pos_score: float, subreddit: str, post_url: str, permalink: str, body: str, author: str, created_date: str, likes: int):
         """
             Inserts a comment from Reddit.

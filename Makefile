@@ -15,3 +15,6 @@ article:
 
 tracking:
 	python tracking.py
+
+legacy_tracking:
+	python download_legacy.py

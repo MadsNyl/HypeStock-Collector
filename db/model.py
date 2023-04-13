@@ -27,7 +27,7 @@ class Query():
         return """
             SELECT symbol
             FROM stock 
-            WHERE legacy = false
+            WHERE legacy IS NULL
         """
 
     @staticmethod
@@ -119,11 +119,19 @@ class Query():
         """
     
     @staticmethod
-    def insert_trackings() -> str:
+    def insert_legacy() -> str:
         return """
             INSERT INTO tracking
-            (symbol, last_price, min_price, max_price, volume, timing, price_change, price_change_pct)
-            VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
+            (symbol, last_price, volume, marketcap, price_change_pct, timing)
+            VALUES(%s, %s, %s, %s, %s, %s)
+        """
+
+    @staticmethod
+    def bulk_insert_legacy() -> str:
+        return """
+            INSERT INTO tracking
+            (symbol, last_price, volume, marketcap, price_change_pct, timing)
+            VALUES(%s)
         """
     
     @staticmethod
