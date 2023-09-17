@@ -1,8 +1,0 @@
-CREATE TABLE stock (
-    symbol varchar(5),
-    name varchar(255),
-    exchange varchar(255),
-    legacy bool,
-    created_date datetime DEFAULT NOW(),
-    PRIMARY KEY (symbol)
-)

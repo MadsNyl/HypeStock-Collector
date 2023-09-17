@@ -1,9 +1,0 @@
-CREATE TABLE tracking (
-    symbol varchar(8),
-    last_price float,
-    volume bigint,
-    marketcap bigint,
-    price_change_pct float,
-    timing datetime DEFAULT NOW(),
-    FOREIGN KEY(symbol) REFERENCES stock(symbol)
-)

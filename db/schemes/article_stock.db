@@ -1,6 +1,0 @@
-CREATE TABLE article_stock (
-    symbol varchar(5),
-    article_id int,
-    FOREIGN KEY(symbol) REFERENCES stock(symbol),
-    FOREIGN KEY(article_id) REFERENCES article(id)
-)

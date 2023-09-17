@@ -4,6 +4,9 @@ insertstocks:
 reddit:
 	python reddit.py ${args}
 
+crawl:
+	python app/crawler/main.py ${args}
+
 pushshift:
 	python pushshift.py ${args}
 
