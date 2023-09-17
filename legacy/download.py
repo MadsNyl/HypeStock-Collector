@@ -34,6 +34,8 @@ class Legacy():
             prev = data
 
             progressbar(i + 1, len(self._data), None)
+    
+    def _bulk_insert(self) -> None: INSERT.legacy_bulk(self._data)
 
     def _insert_weekends(self, data: list, prev: list) -> None:
         prev_timing = prev[3]
@@ -67,6 +69,8 @@ class Legacy():
                     symbol,
                     float(data[4]) if not self._is_null(data[4]) else None,
                     int(data[6]) if not self._is_null(data[6]) else None,
+                    None,
+                    None,
                     data[0]
                 ))
 
@@ -84,7 +88,7 @@ class Legacy():
         symbol = symbol.replace("/", "_")
         file = f"legacy/{symbol}.csv"
         headers = {"User-Agent": USER_AGENT}
-        start = str(time.mktime(datetime.datetime(2020, 1, 1).timetuple())).split(".")[0]
+        start = str(time.mktime(datetime.datetime(2023, 3, 2).timetuple())).split(".")[0]
         now = str(time.time()).split(".")[0]
         period = f"?period1={start}&period2={now}&interval=1d&events=history&includeAdjustedClose=true"
         res = requests.get(f"{DOWNLOAD_API}{symbol}{period}", headers=headers)

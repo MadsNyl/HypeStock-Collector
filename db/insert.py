@@ -113,11 +113,9 @@ class INSERT():
             Inserts a legacy tracking of stockprice.
         """
         try:
-            pool.execute(
-                Query.insert_legacy(),
-                (
-                    data
-                )
+            pool.executemany(
+                Query.bulk_insert_legacy(),
+                data
             )
 
             db.commit()

@@ -131,7 +131,7 @@ class Query():
         return """
             INSERT INTO tracking
             (symbol, last_price, volume, marketcap, price_change_pct, timing)
-            VALUES(%s)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
     
     @staticmethod

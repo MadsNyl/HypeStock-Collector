@@ -39,9 +39,6 @@ class Article():
     def __analyze_text(self, text: list[str]) -> list[dict]:
         hits = []
 
-        # if self.__is_name_match(text.lower()) is not None: 
-        #     if 
-
         for word in text:
             if word in [i["ticker"] for i in hits]: continue
 

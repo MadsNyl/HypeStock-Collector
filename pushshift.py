@@ -41,14 +41,14 @@ def main():
     subs = GET.subreddits()
     subs = list(map(lambda x: x[0], subs))
     count = 500
-    days = 300
+    days = 60
 
     if len(sys.argv) > 1: count = sys.argv[1] 
 
     for sub in subs: 
-        while days > 2: 
+        while days > 1: 
             comments(sub, count, days, days - 1) 
             days -= 1
-        days = 300
+        days = 60
 
 if __name__ == "__main__": main()
