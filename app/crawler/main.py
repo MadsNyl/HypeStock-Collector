@@ -2,18 +2,20 @@ import asyncio
 
 from app.http import http, build_url, Proxy
 from app.crawler.crawler import crawl_articles
-from settings import API_URL
+from app.classes import Newspaper
 
 
 
 def crawl():
-    proxy = Proxy
 
-    crawl_articles(
-        "https://cnn.com",
-        "https://cnn.com",
-        "CNN",
-        [],
-        [],
-        proxy
+    article_urls = crawl_articles(
+        Newspaper(
+            id=1,
+            provider="cnn",
+            name="CNN",
+            start_url="https://edition.cnn.com/business",
+            base_url="https://edition.cnn.com"
+        )
     )
+
+    

@@ -1,0 +1,1 @@
+from app.classes.newspaper import Newspaper
